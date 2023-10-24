@@ -1,17 +1,31 @@
 import React from 'react';
 
 import Toast from '../Toast';
+
+import { ToastContext } from '../ToastProvider/ToastProvider';
+
 import styles from './ToastShelf.module.css';
 
 function ToastShelf() {
+  const { toasts, setToasts } = React.useContext(ToastContext);
+
+  const deleteToastById = (id) => {
+    setToasts(toasts.filter((toast) => toast.id !== id));
+  };
+
   return (
     <ol className={styles.wrapper}>
-      <li className={styles.toastWrapper}>
-        <Toast variant="notice">Example notice toast</Toast>
-      </li>
-      <li className={styles.toastWrapper}>
-        <Toast variant="error">Example error toast</Toast>
-      </li>
+      {toasts.map(({ id, variant, message }) => {
+        return (
+          <li key={id} className={styles.toastWrapper}>
+            <Toast
+              variant={variant}
+              message={message}
+              deleteToast={() => deleteToastById(id)}
+            />
+          </li>
+        );
+      })}
     </ol>
   );
 }
